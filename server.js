@@ -14,6 +14,7 @@ const credentials = {
 const app = express()
 const port = process.env.PORT || 5000
 const dbUrl = `mongodb+srv://${credentials.user}:${credentials.password}@cluster0.xhhci.mongodb.net/testDatabase`
+const __dirname = path.resolve()
 
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }))
@@ -25,9 +26,9 @@ app.use(authRoutes)
 
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.resolve('../client/build')))
+    app.use(express.static(path.join(__dirname, '../client/build')))
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve('../client/build', 'index.html'))
+        res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'))
     })
 }
 
