@@ -48,8 +48,8 @@ router.post('/api/login', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, roles: user.roles }, jwtKey, { expiresIn: '5h' })
 
-        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true, path: '/' })
-        res.cookie('roles', user.roles.join('|'), { sameSite: 'none', secure: true, path: '/' })
+        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true, path: '/admin' })
+        res.cookie('roles', user.roles.join('|'), { sameSite: 'none', secure: true, path: '/admin' })
 
         res.status(200).json({ jwt: token, roles: user.roles })
     } catch (e) {
