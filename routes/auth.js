@@ -21,8 +21,8 @@ router.post('/api/register', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, roles: user.roles }, jwtKey, { expiresIn: '5h' })
 
-        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true, path: '/' })
-        res.cookie('roles', user.roles.join('|'), { sameSite: 'none', secure: true, path: '/' })
+        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true, path: '/', expires: new Date(Date.now() + 900000)})
+        res.cookie('roles', user.roles.join('|'), { sameSite: 'none', secure: true, path: '/admin', expires: new Date(Date.now() + 900000) })
 
         res.status(201).json({ jwt: token, roles: user.roles })
 
