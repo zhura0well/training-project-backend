@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "cd ../client && yarn start",
+    "client": "cd ../client && yarn dev",
     "dev": "concurrently \"yarn run server\" \"yarn run client\""
   },
   "dependencies": {
@@ -19,7 +19,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.0.3"
+    "mongoose": "^6.0.3",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

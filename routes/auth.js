@@ -19,12 +19,11 @@ router.post('/api/register', async (req, res) => {
         const user = new Auth({ username, password: hashPassword, roles: [ROLE.USER] })
         await user.save()
 
-        const token = jwt.sign({ id: user._id, roles: user.roles }, jwtKey, { expiresIn: '1h' })
+        const token = jwt.sign({ id: user._id, roles: user.roles }, jwtKey, { expiresIn: '5h' })
 
-        res.cookie('jwt', token, { httpOnly: true })
-        res.cookie('roles', user.roles.join('|'))
+        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true })
 
-        res.status(201).json({ jwt: token, roles: user.roles })
+        res.status(201).json({ roles: user.roles })
 
     } catch (e) {
         console.log(e)
@@ -48,10 +47,9 @@ router.post('/api/login', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, roles: user.roles }, jwtKey, { expiresIn: '5h' })
 
-        res.cookie('jwt', token, { httpOnly: true })
-        res.cookie('roles', user.roles.join('|'))
+        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true })
 
-        res.status(200).json({ jwt: token, roles: user.roles })
+        res.status(200).json({ roles: user.roles })
     } catch (e) {
         console.log(e)
         res.status(400).json({ message: 'Login error' })
