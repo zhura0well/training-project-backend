@@ -21,7 +21,7 @@ router.post('/api/register', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, roles: user.roles }, jwtKey, { expiresIn: '5h' })
 
-        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true })
+        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none' })
 
         res.status(201).json({ roles: user.roles })
 
@@ -47,7 +47,7 @@ router.post('/api/login', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, roles: user.roles }, jwtKey, { expiresIn: '5h' })
 
-        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none', secure: true })
+        res.cookie('jwt', token, { httpOnly: true, sameSite: 'none' })
 
         res.status(200).json({ roles: user.roles })
     } catch (e) {
