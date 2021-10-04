@@ -5,6 +5,7 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import usersRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
+import productRoutes from './routes/products.js'
 
 
 const credentials = {
@@ -29,6 +30,7 @@ app.use(cors(corsOptions))
 
 app.use(usersRoutes)
 app.use(authRoutes)
+app.use(productRoutes)
 
 
 if (process.env.NODE_ENV === 'production') {
