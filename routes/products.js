@@ -60,7 +60,7 @@ router.put('/api/products/:id', authMiddleware([ROLE.ADMIN, ROLE.MODER]), async 
 })
 
 //DELETE
-router.delete('/api/users/:id', authMiddleware([ROLE.ADMIN, ROLE.MODER]), async (req, res) => {
+router.delete('/api/products/:id', authMiddleware([ROLE.ADMIN, ROLE.MODER]), async (req, res) => {
     try {
         await Products.findByIdAndDelete(req.params.id)
         await res.status(200).json({ message: 'Successfully deleted' })
