@@ -6,12 +6,17 @@ import cookieParser from 'cookie-parser'
 import usersRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
 import productRoutes from './routes/products.js'
+import imagesRoutes from './routes/images.js'
+import fileUpload from 'express-fileupload'
 
 
 const credentials = {
     user: 'user',
     password: 'userpassword'
 }
+
+
+
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -31,6 +36,7 @@ app.use(cors(corsOptions))
 app.use(usersRoutes)
 app.use(authRoutes)
 app.use(productRoutes)
+app.use(imagesRoutes)
 
 
 if (process.env.NODE_ENV === 'production') {
