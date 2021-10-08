@@ -12,6 +12,11 @@ const region = process.env.AWS_BUCKET_REGION
 const accessKeyId = process.env.AWS_ACCESS_KEY
 const secretAccessKey = process.env.AWS_SECRET_KEY
 
+const unlinkFile = util.promisify(fs.unlink)
+const upload = multer({ dest: 'uploads/' })
+const router = Router()
+
+
 const s3 = new AWS.S3({
     region,
     accessKeyId,
@@ -39,9 +44,6 @@ function getFileStream(fileKey) {
 
     return s3.getObject(downloadParams).createReadStream()
 }
-
-const upload = multer({ dest: 'uploads/' })
-
 
 router.put('/api/images/:productId', upload.single('file'), async (req, res) => {
     try {
