@@ -60,9 +60,13 @@ router.get('/api/images/:productId', async (req, res) => {
         const product = await Products.findById(req.params.productId)
         const key = product.imageKey
 
-        const readStream = getFileStream(key)
-
-        readStream.pipe(res)
+        if (!key) {
+            res.status(400).json({ message: 'Image not found' })
+        } else {
+            const readStream = getFileStream(key)
+            readStream.pipe(res)
+        }
+        
     } catch (e) {
         console.log(e)
         res.status(400).json({ message: 'Error occured' })
