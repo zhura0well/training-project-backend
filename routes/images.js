@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import multer from 'multer'
-import fs from 'fs'
-import util from 'util'
+import multerS3 from 'multer-s3'
 import Products from '../models/Products.js'
 import AWS from 'aws-sdk'
 import dotenv from 'dotenv'
@@ -12,28 +11,27 @@ const region = process.env.AWS_BUCKET_REGION
 const accessKeyId = process.env.AWS_ACCESS_KEY
 const secretAccessKey = process.env.AWS_SECRET_KEY
 
-const unlinkFile = util.promisify(fs.unlink)
-const upload = multer({ dest: 'uploads/' })
-const router = Router()
-
-
 const s3 = new AWS.S3({
     region,
     accessKeyId,
     secretAccessKey
 })
 
-function uploadFile(file) {
-    const fileStream = fs.createReadStream(file.path)
+const upload =
+    multer({
+        storage: multerS3({
+            s3,
+            bucket: bucketName,
+            metadata: function (req, file, cb) {
+                cb(null, { fieldName: file.fieldname });
+            },
+            key: function (req, file, cb) {
+                cb(null, Date.now().toString());
+            },
+        }),
+    })
 
-    const uploadParams = {
-        Bucket: bucketName,
-        Body: fileStream,
-        Key: file.filename
-    }
-
-    return s3.upload(uploadParams).promise()
-}
+const router = Router()
 
 
 function getFileStream(fileKey) {
@@ -47,13 +45,8 @@ function getFileStream(fileKey) {
 
 router.put('/api/images/:productId', upload.single('file'), async (req, res) => {
     try {
-        const file = req.file
+        const product = await Products.findByIdAndUpdate(req.params.productId, { imageKey: req.file.key }, { new: true })
 
-        const result = await uploadFile(file)
-
-        const product = await Products.findByIdAndUpdate(req.params.productId, { imageKey: result.key }, { new: true })
-
-        await unlinkFile(file.path)
         return res.status(200).json(product)
     } catch (e) {
         console.log(e)
@@ -61,7 +54,7 @@ router.put('/api/images/:productId', upload.single('file'), async (req, res) => 
     }
 })
 
-router.get('/api/images/:productId', upload.single('file'), async (req, res) => {
+router.get('/api/images/:productId', async (req, res) => {
     try {
 
         const product = await Products.findById(req.params.productId)
