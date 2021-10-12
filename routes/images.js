@@ -54,11 +54,10 @@ router.put('/api/images/:productId', upload.single('file'), async (req, res) => 
     }
 })
 
-router.get('/api/images/:productId', async (req, res) => {
+router.get('/api/images/:imageKey', async (req, res) => {
     try {
 
-        const product = await Products.findById(req.params.productId)
-        const key = product.imageKey
+        const key = req.params.imageKey
 
         if (!key) {
             res.status(400).json({ message: 'Image not found' })
