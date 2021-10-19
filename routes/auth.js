@@ -28,7 +28,7 @@ router.post('/api/register', async (req, res) => {
         }
         
 
-        res.status(201).json({ roles: user.roles })
+        res.status(201).json({ roles: user.roles, _id: user._id })
 
     } catch (e) {
         console.log(e)
@@ -58,7 +58,7 @@ router.post('/api/login', async (req, res) => {
             res.cookie('jwt', token, { httpOnly: true })
         }
         
-        res.status(200).json({ roles: user.roles })
+        res.status(200).json({ roles: user.roles, _id: user._id })
     } catch (e) {
         console.log(e)
         res.status(400).json({ message: 'Login error' })
@@ -94,6 +94,28 @@ router.patch('/api/roles/:id', authMiddleware([ROLE.ADMIN]), async (req, res) =>
             return res.status(400).json({ message: 'Non-existent role' })
         }
 
+        const user = await Auth.findByIdAndUpdate(req.params.id, req.body, {new: true})
+        res.status(200).json(user)
+    } catch (e) {
+        console.log(e)
+        res.status(400).json({ message: 'Error occured' })
+    }
+})
+
+
+router.get('/api/shoppingCart/:id', authMiddleware([ROLE.USER, ROLE.MODER, ROLE.ADMIN]), async (req, res) => {
+    try {
+        const user = await Auth.findById(req.params.id)
+        res.status(200).json(user.cart)
+    } catch (e) {
+        console.log(e)
+        res.status(400).json({ message: 'Error occured' })
+    }
+})
+
+
+router.put('/api/shoppingCart/:id', authMiddleware([ROLE.USER, ROLE.MODER, ROLE.ADMIN]), async (req, res) => {
+    try {
         const user = await Auth.findByIdAndUpdate(req.params.id, req.body, {new: true})
         res.status(200).json(user)
     } catch (e) {

@@ -8,3 +8,4 @@ const schema = new mongoose.Schema({
 })
 
 export default mongoose.model('Products', schema)
+export const ProductSchema = schema
