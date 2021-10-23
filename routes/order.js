@@ -2,6 +2,7 @@ import { Router } from 'express'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import { ROLE } from '../config.js'
 import OrderTest from '../models/OrderTest.js'
+import Products from '../models/Products.js'
 
 const router = Router()
 
@@ -36,7 +37,18 @@ router.get('/api/orders', async (req, res) => {
 
 router.get('/api/orders/:id', async (req, res) => {
     try {
-        const order = await OrderTest.findById(req.params.id)
+        const order = await OrderTest.findById(req.params.id).populate({
+            path: 'cart',
+            populate: {
+                path: 'items',
+                populate: {
+                    path: '_id',
+                    model: Products
+                }
+                
+            }
+
+        })
         res.status(200).json(order)
     } catch (e) {
         console.log(e)
@@ -47,9 +59,8 @@ router.get('/api/orders/:id', async (req, res) => {
 
 router.put('/api/orders/confirmOrder/:id', authMiddleware([ROLE.ADMIN, ROLE.MODER]), async (req, res) => {
     try {
-        const order = await OrderTest.findById(req.params.id)
-        order.confirmed = req.body.confirmed
-        res.status(200).json({confirmed: order.confirmed, _id: order._id})
+        const order = await OrderTest.findByIdAndUpdate(req.params.id, req.body, {new: true} )
+        res.status(200).json({ confirmed: order.confirmed, _id: order._id })
     } catch (e) {
         console.log(e)
         res.status(400).json({ message: 'Error occured' })
