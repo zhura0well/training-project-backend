@@ -7,6 +7,8 @@ import usersRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
 import productRoutes from './routes/products.js'
 import imagesRoutes from './routes/images.js'
+import orderRoutes from './routes/order.js'
+
 
 const credentials = {
     user: 'user',
@@ -32,6 +34,7 @@ app.use(usersRoutes)
 app.use(authRoutes)
 app.use(productRoutes)
 app.use(imagesRoutes)
+app.use(orderRoutes)
 
 
 if (process.env.NODE_ENV === 'production') {
