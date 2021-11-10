@@ -5,7 +5,11 @@ const schema = new mongoose.Schema({
     username: { type: String },
     email: { type: String, required: true },
     phone: { type: String, required: true },
-    confirmed: { type: Boolean, required: true, default: false },
+    status: { 
+        type: String, 
+        enum: ['CREATED', 'SHIPPING', 'ARRIVED', 'CONFIRMED', 'DECLINED' ], 
+        default: 'CREATED' 
+    },
     cart: {
         items: [
             {
@@ -17,4 +21,4 @@ const schema = new mongoose.Schema({
     }
 })
 
-export default mongoose.model('OrderTest', schema)
+export default mongoose.model('Orders', schema)
