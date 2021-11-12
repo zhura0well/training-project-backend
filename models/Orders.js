@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 import Products from './Products.js'
+import Auth from './Auth.js'
 
 const schema = new mongoose.Schema({
-    username: { type: String },
+    userId : {type: mongoose.Schema.Types.ObjectId, ref: Auth, default: null},
     email: { type: String, required: true },
     phone: { type: String, required: true },
     status: { 
