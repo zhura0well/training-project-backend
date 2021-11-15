@@ -124,4 +124,16 @@ router.put('/api/shoppingCart/:id', authMiddleware([ROLE.USER, ROLE.MODER, ROLE.
     }
 })
 
+
+router.get('/api/personalCabinet/:id', authMiddleware([ROLE.USER]), async (req, res) => {
+    try {
+        const user = await Auth.findById(req.params.id)
+        /*can be extended*/
+        res.status(200).json({username: user.username})
+    } catch (e) {
+        console.log(e)
+        res.status(400).json({ message: 'Error occured' })
+    }
+})
+
 export default router
