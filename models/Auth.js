@@ -5,6 +5,8 @@ import Products from './Products.js'
 const schema = new mongoose.Schema({
     username: {type: String, required: true, unique: true},
     password: {type: String, required: true},
+    firstName: {type: String},
+    lastName: {type: String},
     roles: [{type: String, default: ROLE.USER, required: true}],
     cart: {
         items: [
